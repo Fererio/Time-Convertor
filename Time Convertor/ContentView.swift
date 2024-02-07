@@ -13,12 +13,35 @@ struct ContentView: View {
     
     @State private var selectedInputUnit = "Days"
     @State private var time = 0
-    @State private var outputUnit = "Seconds"
+    @State private var selectedOutputUnit = "Seconds"
     
     var outputTime: Int {
         // Calculation of the output
+        var outputTimeInSec = 0
+        switch selectedInputUnit {
+        case "Minutes":
+            outputTimeInSec = time * 60
+        case "Hours":
+            outputTimeInSec = time * 60 * 60
+        case "Days":
+            outputTimeInSec = time * 60 * 60 * 24
+        default:
+            outputTimeInSec = time
+        }
         
-        return 10
+        var actualOutputTime = 0
+        
+        switch selectedOutputUnit {
+        case "Minutes":
+            actualOutputTime = outputTimeInSec / 60
+        case "Hours":
+            actualOutputTime = (outputTimeInSec / 60) / 60
+        case "Days":
+            actualOutputTime = ((outputTimeInSec / 60) / 60) / 24
+        default:
+            actualOutputTime = outputTimeInSec
+        }
+        return actualOutputTime
     }
     
     var body: some View {
@@ -38,7 +61,7 @@ struct ContentView: View {
                 }
                 
                 Section {
-                    Picker("Output Unit", selection: $outputUnit) {
+                    Picker("Output Unit", selection: $selectedOutputUnit) {
                         ForEach(unit, id: \.self) {
                             Text($0)
                         }
